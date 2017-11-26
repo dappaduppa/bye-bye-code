@@ -1,0 +1,10 @@
+title: bye-bye-code
+author: dappaduppa
+email: duppadappa@gmail.com
+description: This is an attempt to say bye bye to code
+twitter_username: dappaduppa
+github_username:  dappaduppa
+
+# Build settings
+markdown: kramdown
+theme: minima
