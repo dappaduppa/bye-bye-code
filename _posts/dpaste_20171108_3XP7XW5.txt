@@ -1,0 +1,642 @@
+void printCollection(Collection<?> c) {
+    for (Object e : c) {
+        System.out.println(e);
+    }
+}
+
+    vs
+
+void printCollection(Collection<?> c) {
+    for (String e : c) {
+        System.out.println(e);
+    }
+}
+
+-----------------
+
+
+Object[] oa = new Object[100];
+
+String[] sa = new String[100];
+
+oa = sa;
+
+sa = oa; // Not OK. explicit cast required.
+
+sa = (String[])oa; // Compile ok, but
+                   // ClassCastException at runtime.
+
+
+------------------
+    Object[] oa = new Object[100];
+    Collection<Object> co = new ArrayList<Object>();
+
+
+    fromArrayToCollection(oa, co);
+
+    String[] sa = new String[100];
+    Collection<String> cs = new ArrayList<String>();
+
+    fromArrayToCollection(sa, cs);
+
+    fromArrayToCollection(sa, co); // T is inferred as Object
+
+    static <T> void fromArrayToCollection(T[] a, Collection<T> c) {
+        for (T t : a) {
+            c.add(t);
+        }
+    }
+===
+//TODO
+
+create one billion record batch processsing system.
+
+---------
+java doc:
+---------
+
+Looking like code :
+--------------------
+
+The <code></code> tag is not referencing a specific parameter.
+It is formatting the word "String" into "code looking" text.
+
+you can use {@code foo}.
+
+This is especially good to know when you refer to a generic type such as {@code Iterator<String>}
+    -- sure looks nicer than <code>Iterator&lt;String&gt;</code>, doesn't it!
+
+
+Link:
+-----
+
+{@linkplain java.nio.charset.Charset chset} -->
+    link/anchor name will be "chset"
+
+
+How to add reference to a method parameter in javadoc?
+    --> Not possible.
+
+
+********************************************************************************
+java
+********************************************************************************
+
+
+jvisualvm consists of ....
+
+    jconsole
+    jstat
+    jinfo
+    jstack
+    jmap
+
+Dont directly copy the no. and expect the same behaviour.
+        //Thread.sleep(2000); --> 2 secs
+        TimeUnit.SECONDS.sleep(2000); --> 2000 secs
+
+//TODO
+jstat ....
+
+jstat -compiler <pid>
+
+C:\Users\smbcxpdev01>jstat -compiler 3020
+Compiled Failed Invalid   Time   FailedType FailedMethod
+     123      0       0     0.12          0
+
+
+    -->
+
+jstat -printcompilation <pid> <freq in millis>
+
+C:\Users\smbcxpdev01>jstat -printcompilation 3020 10
+Compiled  Size  Type Method
+     124    630    1 ds/NoVisibility$ReaderThread run
+     124    630    1 ds/NoVisibility$ReaderThread run
+     124    630    1 ds/NoVisibility$ReaderThread run
+
+//TODO
+yourkit  -- java profiling
+
+browserstack -- cross browser testing
+
+jfrog artifactory --> hosting spring projects
+
+MaxPermSize --> MaxMetaspaceSize
+
+ClassMetaSpaceSize --> default 2Mb
+
+********************************************************************************
+java collections
+********************************************************************************
+
+
+Arrays as List:
+--------------
+
+List<String> list = Arrays.<String>asList("abcd", "efgh");
+    is equivalent to
+
+
+    List<String> list = Arrays.<String>asList(new String[]{"abcd", "efgh"});
+        --> It does not create List<String[]>
+            If you want to create List<String[]>
+
+            List<String[]> list = Arrays.<String[]>asList(new String[]{"abcd"}, new String[]{"efgh"});
+
+
+
+    // NG: this will not work.
+    List<String> list = Arrays.<String>asList({"abcd", "efgh"});
+
+    // this is ok.
+    List<String> list = Arrays.<String>asList(new String[]{"abcd", "efgh"});
+
+
+    list modification (remove, add ) obtained via asList will throw
+    java.lang.UnsupportedOperationException, since the list is just a wrapper.
+
+    but set(index, value) will NOT throw exception,
+    please refer Arrays$ArrayList
+
+
+toArray vs toArray T :
+--------------------
+toArray T is preferred...
+
+List<String> list = ....
+
+// NG: ClassCastException ... can not convert Object[] to String[]
+String[] strArr = (String[])list.toArray();
+
+// OK
+String[] strs = new String[0]; // strs.length = 0 ; strs -> has reference NOT null
+String[] strArr = list.<String>toArray(strs);
+    strs and strArr has different reference.
+
+if size is equal or greater than the size of the list, strs and strArr has the same reference.
+    String[] strs = new String[size];
+
+removeAll null element from collection
+--------------------------------------
+
+List<String> list = ...
+list.removeAll(Collections.singleton(null));
+
+//NG
+list.removeAll(null); // --> throws NPE... so code review grep for removeAll(null) .... if there is NO null found in the array, NO NPE is thrown. also applicable to any NON null values.
+
+
+
+list.remove(null);// --> removes only one null element ( the very first )
+
+Also removeAll throws UnsupportedOperationException, if the list is created using Arrays.asList()
+
+remove duplicates:
+------------------
+
+List<String> list = ...
+
+Set<String> set = new HashSet<>(list); // list order is NOT preserved.
+
+Set<String> set = new LinkedHashSet<>(list); // list order is preserved.
+
+The original list could have been created using Arrays.asList,
+because new Set is created from the list.... and NO UnsupportedOperationException is thrown.
+also no new object created only the new Set object is created.
+
+
+Map iteration:
+--------------
+
+Map<String, String> map = ...
+
+for(Map.Entry<String, String> entry : map.entrySet()) {
+    final String key = entry.getKey();
+    final String value = entry.getValue();
+}
+
+//TODO :
+why abstractlist remove always throw unsupportedoperationexception:
+how to view the trace path of all the files, methods executed... in java
+----------------
+
+// TODO:
+Concurrent Set Queue
+
+Queue with unique elements?
+
+
+Collection
+    Iterable
+        +
+        ---> iterator()
+
+
+Collection interface methods
+
+    add
+    addAll
+
+    remove
+    removeAll
+
+
+    contains
+    containsAll
+
+
+    retainAll
+
+    iterator
+
+    clear
+    isEmpty()
+
+    size
+
+    equals
+
+    hashCode
+
+    toArray
+
+    <T> T[] toArray(T[])
+
+----
+Queue extends Collection
+
+additional methods:
+    does not throw exception
+
+FIFO
+
+elements added at the tail of the queue.
+
+do not use (avoid use) null ( eventhough queue allows it)
+
+PriorityQueue --> sort
+
+java.util.Queue ... not bounded
+
+java.util.concurrent.queue ---> bounded
+
+
+bound means --> restrict the no. of elements it hold.
+
+java.util.concurrent.BlockingQueue --> wait for something like space ...etc
+In general this BlokingQueue kind not avalible in java.util.Queue
+
+---
+
+see checker framework
+    https://checkerframework.org/tutorial/
+    for ex. finding NPE
+
+As of the Java SE 8 release, annotations can also be applied to the use of types. Here are some examples:
+
+Class instance creation expression:
+    new @Interned MyObject();
+Type cast:
+    myString = (@NonNull String) str;
+implements clause:
+    class UnmodifiableList<T> implements
+        @Readonly List<@Readonly T> { ... }
+Thrown exception declaration:
+    void monitorTemperature() throws
+        @Critical TemperatureException { ... }
+This form of annotation is called a type annotation. For more information, see Type Annotations and Pluggable Type Systems.
+
+--------------------
+
+Functional Interfaces:
+
+
+java.util.function
+
+1) Predicate test()
+2) BiFunction   apply()
+3) BiConsumer 2 inputs , but dont return....
+4) BinaryOperator apply().... same as BiFunction, but also same types for input and output
+5) BiPredicate  test() two arguments
+6) Consumer ....accept as array or list and iterate...
+    please refer C:\dhans\src\java\src\MyRepeatingAnno.java
+
+SafeVarargs
+    since there is no new T[] in java possible,
+    it will be new Object[] for the varargs....
+    so the compiler throws the warning .. SafeVarargs.
+
+    please refer the javadoc....you will understand ...
+    inside the method, there is a possiblity of ClassCastException happen
+    because of the developer.
+
+--------------------
+
+Item  1: Consider static factory methods instead of constructors.
+// NOT same as Factory Method pattern from Design Patterns [Gamma95, p. 107]
+// Adv: 1) Name of method ( compared to constructors)
+        2) Not required to create New object (Flyweight pattern)
+           == operator instead of the equals(Object) method, which may
+            result in improved performance
+        3) return an object of any subtype (unlike constructors).
+            ex 1: Collections.static methods
+            ex 2: EnumSet
+                    64 or fewer ( RegularEnumSet)
+                    65 or more (JumboEnumSet)
+        4) reduce verbosity ( by type inference)
+            Map<String, List<String>> m =
+                new HashMap<String, List<String>>();
+
+            public static <K, V> HashMap<K, V> newInstance() {
+                return new HashMap<K, V>();
+            }
+            ---
+            Map<String, List<String>> m = HashMap.newInstance();
+
+            java 7 :
+                // diamond operator
+                Map<String, List<String>> m = new HashMap<>();
+
+
+            public static Boolean valueOf(boolean b) {
+                return b ? Boolean.TRUE : Boolean.FALSE;
+            }
+Item  2: Consider builder pattern when faced many constructor parameters.
+    // TODO: generic type.
+Item 3: Singleton by private constructor or enum
+    public enum SingletonPattern {
+
+        INSTANCE;
+
+        public void doWork() {
+            // TODO : the implentation
+        }
+    }
+
+    ---------
+
+    import java.io.Serializable;
+
+    public class Singleton implements Serializable{
+
+        private static final long serialVersionUID = -3669931045398797492L;
+
+        private static final Singleton INSTANCE = new Singleton();
+
+        private Singleton() {
+
+        }
+
+        public static Singleton getInstance() {
+            return INSTANCE;
+        }
+
+        // readResolve method to preserve singleton property
+        private Object readResolve() {
+            // Return the one true Singleton and let the garbage collector
+            // take care of the Singleton impersonator.
+            return INSTANCE;
+        }
+    }
+
+
+Item 4: Enforcce non-instantiability with private constructor
+
+    //Noninstantiable utility class
+    public class UtilityClass {
+        // Suppress default constructor for noninstantiability
+        private UtilityClass() {
+            throw new AssertionError();
+        }
+        // ... // Remainder  util methods
+    }
+
+Item 5: Avoid creating unnecessary objects.
+
+    Reuse objects. use static blocks for init and then reuse objects.
+    String s = new String("stringette"); // DON'T DO THIS!
+
+    class AvoidUnnecessaryObjectsCreationWithStatic {
+        private static final Type1 varName1;
+        private static final Type2 varName2;
+        static {
+            varName1 = ...
+            varName2 = ...
+        }
+
+        public void checkMethod() {
+            // using varName1, varName2 for calculation
+        }
+        // Also check in loops for creating objects
+    }
+
+
+    // also
+    // prefer primitives to boxed primitives,
+    // and watch out for unintentional autoboxing
+
+Item  6: Eliminate obsolete object references
+    // when pop out references
+
+Item 7: Avoid finalizers -- @ home
+Item 8: Obey general contract when overriding equals
+    Object methods.
+        equals()
+            write test cases for
+                1) Reflexive x.equals(x)
+                2) Symmetry x.equals(y) y.equals(x)
+                3) Transiive x.equals(y)  y.equals(z)  x.equals(z)
+                4) consistency, x.equals(y) multiple times, and also 1) to 3)
+                        multiple times.
+                5) x non null , then x.equals(null) --> false
+
+        Subclassing value class violate symmetry
+        Favour composition over inheritance.
+
+        @Override public boolean equals(Object o) {
+            if (!(o instanceof MyType)) {
+                return false; // returns false also if o is null
+            }
+            MyType mt = (MyType) o;
+            ...
+        }
+
+        sample from AbstractList
+
+            public boolean equals(Object o) {
+                if (o == this)
+                    return true;
+                if (!(o instanceof List))
+                    return false;
+                    ....
+
+        // Float.compare
+        // Double.compare
+        // Arrays.equals(float[], float[]) ....hmmm
+            have to use Float.compare inside Arrays.equals
+
+        also for equals method check hash value and store it inside the field.
+
+        field check equality inside equals method
+        (field == o.field || (field != null && field.equals(o.field)))
+
+    ------
+    hashCode of double:
+
+    @Override public int hashCode() {
+        int result = 17 + hashDouble(re);
+        result = 31 * result + hashDouble(im);
+        return result;
+    }
+    private int hashDouble(double val) {
+        long longBits = Double.doubleToLongBits(re);
+        return (int) (longBits ^ (longBits >>> 32));
+    }
+    ------
+
+Item 12: Consider implementing Comparable
+        public interface Comparable<T> {
+            int compareTo(T t);
+        }
+
+
+----------
+
+BigInteger usage and BigDecimal usage
+
+How wrapper classes are NOT suitable for callback frameworks.
+
+B really an A?
+    NO...then....B should not extend A.
+
+
+
+Item 20: Prefer class hierarchies to tagged classes
+
+Item 21: Use function objects to represent strategies
+
+    why implement serializable in comparator.
+    See the example: (page 105)
+    class Host {
+    private static class StrLenCmp
+    implements Comparator<String>, Serializable {
+
+
+Item 53: Prefer interfaces to reflection
+
+
+Chapter 5: Generics
+
+    Item 29: Consider typesafe heterogeneous containers
+
+
+--------------------
+template for Repeating annotation
+
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+public class RepeatingAnnotations {
+
+    //TODO rename the xxxsss , ( plural annotation)
+    //TODO rename yyy ( repeated annotation in  xxxsss)
+    @Retention( RetentionPolicy.RUNTIME )
+    public @interface xxxsss {
+        yyy[] value() default{};
+    }
+
+
+    @Repeatable(value = xxxsss.class )
+    public @interface yyy {
+        String value();
+    };
+
+    //TODO sample usage
+    //TODO set value in ""
+    //TODO rename "TobeUsed"
+    //TODO expand the list {} as much as you desire
+    @xxxsss({@yyy(""), @yyy("")})
+    public interface TobeUsed {
+
+    }
+}
+
+------
+https://stackoverflow.com/questions/1673841/examples-of-gof-design-patterns-in-javas-core-libraries
+
+Static factory
+Abstract factory pattern
+Factory method pattern
+
+
+Builder pattern
+
+Prototype pattern
+
+Singleton
+    Runtime.getRuntime()
+    System.getSecurityManager()
+    Desktop.getDesktop()
+---
+//TODO: moores law
+
+Chapter 16. The Java Memory Model
+
+And  as  processor  manufacturers  transition  to
+multicore processors, largely because clock rates are getting
+harder to increase economically, hardware parallelism will
+only increase.
+
+
+-----------------
+Story required for CopyOnWriteArrayList
+---
+LocalDateTime, ZonedDateTime, and OffsetDateTime
+
+java.time.chrono
+
+
+LocalDate
+TemporalAdjusters
+
+
+
+LocalDate today = LocalDate.now();
+LocalDate payday = today.with(TemporalAdjusters.lastDayOfMonth()).minusDays(2);
+
+
+LocalDate dateOfBirth = LocalDate.of(2012, Month.MAY, 14);
+LocalDate firstBirthday = dateOfBirth.plusYears(1);
+
+
+
+java time packages:
+-------------------
+
+time
+chrono
+format
+temporal
+    Fields (TemporalField and ChronoField) and units (TemporalUnit and ChronoUnit)
+zone
+    Useful classes: ZonedDateTime
+                    ZoneId
+                    ZoneOffset.
+
+
+
+also refer "http://blog.joda.org/" for java 9 features
+
+
+---
+
+Look into method naming conventions
+^-----------
+
+https://docs.oracle.com/javase/tutorial/datetime/overview/naming.html
+
+
+More on date time classes
+https://docs.oracle.com/javase/tutorial/datetime/iso/index.html
