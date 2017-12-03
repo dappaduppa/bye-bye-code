@@ -8,7 +8,7 @@ categories: Java Annotation
 
 **Java Annotation**
 
-Builtin annotations:  
+Builtin annotations:  1
 
 @Override  
 @Deprecated    
@@ -126,9 +126,41 @@ public class SampleRepeatableAnn1 {
 			//	.collect(Collectors.toList()
 				)); 
 }
-
-
 ```
+
+**Template for Repeating annotation**
+
+```java
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+public class RepeatingAnnotations {
+
+    //TODO rename the xxxsss , ( plural annotation)
+    //TODO rename yyy ( repeated annotation in  xxxsss)
+    @Retention( RetentionPolicy.RUNTIME )
+    public @interface xxxsss {
+        yyy[] value() default{};
+    }
+
+
+    @Repeatable(value = xxxsss.class )
+    public @interface yyy {
+        String value();
+    };
+
+    //TODO sample usage
+    //TODO set value in ""
+    //TODO rename "TobeUsed"
+    //TODO expand the list {} as much as you desire
+    @xxxsss({@yyy(""), @yyy("")})
+    public interface TobeUsed {
+
+    }
+}
+```
+
 
 ---------------------------
 

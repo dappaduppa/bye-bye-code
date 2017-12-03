@@ -45,6 +45,9 @@ Type "help", "copyright", "credits" or "license" for more information.
 ## module reload
 ```python
 >>> import imp
+# 3.x use 
+# import importlib
+# importlib.import_module()
 >>> imp.reload('das')
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
@@ -80,6 +83,36 @@ ilvu
 'ilvu\nilvu\n'
 ```
 
+## print multiple vars
+```python
+a = 'this'
+b = 'is'
+c = 'fun'
+print(a, b, c) # this is fun
+# print a, b, c
+
+```
+
+## module
+
+```python
+% python
+>>> import threenames # Grab the whole module: it runs here
+dead parrot sketch
+>>>
+>>> threenames.b, threenames.c # Access its attributes
+('parrot', 'sketch')
+>>>
+>>> from threenames import a, b, c # Copy multiple names out
+>>> b, c
+('parrot', 'sketch'
+
+# dir -> fetch list of all names avl.
+>>> dir(threenames)
+['__builtins__', '__doc__', '__file__', '__name__', '__package__', 'a', 'b', 'c']
+
+
+```
 
 
 ---------------------------

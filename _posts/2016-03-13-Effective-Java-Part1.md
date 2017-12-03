@@ -8,7 +8,7 @@ categories: Effective Java, Part1
 # Creating and Destroying Objects
 
 ## Item 1: Consider static factory methods instead of constructors
-
+// NOT same as Factory Method pattern from Design Patterns [Gamma95, p. 107]  
 // static factory method #(NE) Factory method pattern  
 // no equivalent design pattern ( it is not a design pattern)  
 ```java
@@ -447,6 +447,117 @@ public class UtilityClass {
     // Remainder omitted
 }
 ```
+
+## Item 5: Avoid creating unnecessary objects.
+
+    Reuse objects. use static blocks for init and then reuse objects.
+    String s = new String("stringette"); // DON'T DO THIS!
+
+```java
+    class AvoidUnnecessaryObjectsCreationWithStatic {
+        private static final Type1 varName1;
+        private static final Type2 varName2;
+        static {
+            varName1 = ...
+            varName2 = ...
+        }
+
+        public void checkMethod() {
+            // using varName1, varName2 for calculation
+        }
+        // Also check in loops for creating objects
+    }
+
+
+    // also
+    // prefer primitives to boxed primitives,
+    // and watch out for unintentional autoboxing
+```
+
+
+## Item  6: Eliminate obsolete object references
+    //TODO when pop out references
+
+## Item 7: Avoid finalizers -- @ home
+	// TODO
+
+## Item 8: Obey general contract when overriding equals
+    Object methods.
+        equals()
+            write test cases for
+                1) Reflexive x.equals(x)
+                2) Symmetry x.equals(y) y.equals(x)
+                3) Transiive x.equals(y)  y.equals(z)  x.equals(z)
+                4) consistency, x.equals(y) multiple times, and also 1) to 3)
+                        multiple times.
+                5) x non null , then x.equals(null) --> false
+
+        Subclassing value class violate symmetry
+        Favour composition over inheritance.
+
+        @Override public boolean equals(Object o) {
+            if (!(o instanceof MyType)) {
+                return false; // returns false also if o is null
+            }
+            MyType mt = (MyType) o;
+            ...
+        }
+
+        sample from AbstractList
+
+            public boolean equals(Object o) {
+                if (o == this)
+                    return true;
+                if (!(o instanceof List))
+                    return false;
+                    ....
+
+        // Float.compare
+        // Double.compare
+        // Arrays.equals(float[], float[]) ....hmmm
+            have to use Float.compare inside Arrays.equals
+
+        also for equals method check hash value and store it inside the field.
+
+        field check equality inside equals method
+        (field == o.field || (field != null && field.equals(o.field)))
+
+    ------
+    hashCode of double:
+
+    @Override public int hashCode() {
+        int result = 17 + hashDouble(re);
+        result = 31 * result + hashDouble(im);
+        return result;
+    }
+    private int hashDouble(double val) {
+        long longBits = Double.doubleToLongBits(re);
+        return (int) (longBits ^ (longBits >>> 32));
+    }
+    ------
+
+## Item 12: Consider implementing Comparable
+        public interface Comparable<T> {
+            int compareTo(T t);
+        }
+
+## Item 20: Prefer class hierarchies to tagged classes
+
+## Item 21: Use function objects to represent strategies
+
+    why implement serializable in comparator.
+    See the example: (page 105)
+    class Host {
+    private static class StrLenCmp
+    implements Comparator<String>, Serializable {
+
+
+## Item 53: Prefer interfaces to reflection
+
+
+##Chapter 5: Generics
+
+##    Item 29: Consider typesafe heterogeneous containers
 
 ---------------------------
 

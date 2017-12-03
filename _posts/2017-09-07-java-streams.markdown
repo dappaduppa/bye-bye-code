@@ -178,7 +178,134 @@ map.get(1); // 1one
 
 ```
 
+## Samples
+```java
+List<Transaction> groceryTransactions = new Arraylist<>();
+for(Transaction t: transactions){
+  if(t.getType() == Transaction.GROCERY){
+    groceryTransactions.add(t);
+  }
+}
+Collections.sort(groceryTransactions, new Comparator(){
+  public int compare(Transaction t1, Transaction t2){
+    return t2.getValue().compareTo(t1.getValue());
+  }
+});
+List<Integer> transactionIds = new ArrayList<>();
+for(Transaction t: groceryTransactions){
+  transactionsIds.add(t.getId());
+}
+------------>
+List<Integer> transactionsIds = 
+    transactions.stream()
+                .filter(t -> t.getType() == Transaction.GROCERY)
+                .sorted(comparing(Transaction::getValue).reversed())
+                .map(Transaction::getId)
+                .collect(toList());
+short circuit : Limit
+-------------------------------------------------------------------------
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
+List<Integer> twoEvenSquares = 
+    numbers.stream()
+           .filter(n -> {
+                    System.out.println("filtering " + n); 
+                    return n % 2 == 0;
+                  })
+           .map(n -> {
+                    System.out.println("mapping " + n);
+                    return n * n;
+                  })
+           .limit(2)
+           .collect(toList());
+filtering 1
+filtering 2
+mapping 2
+filtering 3
+filtering 4
+mapping 4
+----
+----
+BeerDrinkers
+Person
+	age
+	
+List<Person> beerDrinkers = persons.stream()
+ .filter(p -> p.getAge() > 18).collect(Collectors.toList())
+----
+ List<Person> beerDrinkers = persons.stream() 
+ .filter(p -> p.getAge() > 16).collect(Collectors.toList()); 
+---
+Set add returns false on duplicate
+---
+persons.forEach(p -> p.setLastName("Doe"))
+---
+List<Person> persons = … 
+// sequential version
+Stream<Person> stream = persons.stream();
+ 
+//parallel version 
+Stream<Person> parallelStream = persons.parallelStream(); 
+------
+```
 
+## More streams 
+```java
+Stream<Student> students = persons.stream()
+      .filter(p -> p.getAge() > 18)
+      .map(new Function<Person, Student>() {
+                  @Override
+                  public Student apply(Person person) {
+                     return new Student(person);
+                  }
+              });
+	(or)
+Stream<Student> students = persons.stream()
+        .filter(p -> p.getAge() > 18)
+        .map(person -> new Student(person));
+	(or)
+
+Stream<Student> students = persons.stream()
+        .filter(p -> p.getAge() > 18)
+        .map(Student::new);
+
+List<Student> students = persons.stream()
+        .filter(p -> p.getAge() > 18)
+        .map(Student::new)
+        .collect(Collectors.toList());
+
+List<Student> students = persons.stream()
+        .filter(p -> p.getAge() > 18)
+        .map(Student::new)
+        .collect(Collectors.toCollection(ArrayList::new));
+
+
+List<Student> students = persons.stream()
+        .parallel()
+        .filter(p -> p.getAge() > 18)  // filtering will be performed concurrently
+        .sequential()
+        .map(Student::new)
+        .collect(Collectors.toCollection(ArrayList::new));
+
+```
+
+```java
+ // use them in with streams 
+ new ArrayList<String>().stream().  
+ // peek: debug streams without changes 
+ peek(e -> System.out.println(e)).  
+ // map: convert every element into something   
+ map(e -> e.hashCode()).  
+ // filter: pass some elements through 
+ filter(e -> ((e.hashCode() % 2) == 0)).    
+ // collect the stream into a collection  
+ collect(Collectors.toCollection(TreeSet::new))
+```
+
+## Optional
+```java
+ Optional<User> user = Optional.ofNullable(getUser(user));  
+ Optional<Location> location = user.map(u -> getLocation(user)); 
+```
 
 ---------------------------
 

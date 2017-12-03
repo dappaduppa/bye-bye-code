@@ -32,7 +32,192 @@ categories: Java, Date
     System.out.println(ZoneId.of("+09:00"));
 ```
 
-   **List out ZoneIds and ZoneIdRules**
+**java.time.chrono**
+```java
+LocalDateTime, ZonedDateTime, and OffsetDateTime
+LocalDate
+TemporalAdjusters
+
+LocalDate today = LocalDate.now();
+LocalDate payday = today.with(TemporalAdjusters.lastDayOfMonth()).minusDays(2);
+
+LocalDate dateOfBirth = LocalDate.of(2012, Month.MAY, 14);
+LocalDate firstBirthday = dateOfBirth.plusYears(1);
+```
+
+   **LocalTime.isBefore()**
+```java
+    final LocalTime lt1 = LocalTime.now(ZoneId.of("Asia/Tokyo"));
+    final LocalTime lt2 = LocalTime.now(ZoneId.of("Asia/Tokyo"));
+
+    System.out.println(lt1);
+    System.out.println(lt2);
+
+    TimeUnit.SECONDS.sleep(1);
+
+    final LocalTime lt3 = LocalTime.now(ZoneId.of("Asia/Tokyo"));
+    System.out.println(lt3);
+
+    System.out.println(lt1.isBefore(lt3));
+```
+
+    Output:
+
+    12:24:46.380
+    12:24:46.380
+    12:24:47.386
+    true
+
+-------
+   **time diff**
+```java
+		final LocalTime lt1 = LocalTime.now(ZoneId.of("Asia/Tokyo"));
+		final LocalTime lt2 = LocalTime.now(ZoneId.of("Asia/Calcutta"));
+		
+		System.out.println(lt1);
+		System.out.println(lt2);
+		
+		System.out.println(ChronoUnit.HOURS.between(lt1, lt2));
+		System.out.println(ChronoUnit.MINUTES.between(lt1, lt2));
+
+Output
+11:55:33.560
+/*
+08:25:33.632
+-3
+-209 ( hmm. how to get 210 ? ) // TODO
+*/
+```
+
+**Some more methods** ( get timezone diff)
+[Reference](https://stackoverflow.com/questions/15788913/java-calculating-time-zone-difference)
+    
+    1) TimeZone.getRawOffset()
+    2) TimeZone.getOffset(long date) // including DST ( Daylight Savings Time)
+
+---------------------------
+
+[Reference datetime samples](http://winterbe.com/posts/2014/03/16/java-8-tutorial/) 
+
+```java
+//withZone
+final DateTimeFormatter dtf = DateTimeFormatter.ofLocalizedDateTime(
+        FormatStyle.FULL).withZone(ZoneId.of("Asia/Calcutta"));
+
+//or withLocale
+
+DateTimeFormatter germanFormatter =
+        DateTimeFormatter
+            .ofLocalizedTime(FormatStyle.SHORT)
+            .withLocale(Locale.GERMAN);
+LocalTime leetTime = LocalTime.parse("13:37", germanFormatter);
+System.out.println(leetTime);   // 13:37
+```
+
+**Don't get mislead by variable names**
+```java
+final LocalDate today = LocalDate.now();
+System.out.println(today);
+final LocalDate tomorrow = today.plus(-1, ChronoUnit.DAYS);
+System.out.println(tomorrow);
+final LocalDate actToday = tomorrow.minus(1, ChronoUnit.DAYS);
+System.out.println(actToday);
+/* Output (executed on 2017/09/06)
+ * 2017-09-06
+ * 2017-09-05
+ * 2017-09-04
+ */
+
+```
+
+**Navigate to particular date**
+```java
+final LocalDate indDay = LocalDate.of(1945, Month.AUGUST, 15);
+System.out.println(indDay);
+System.out.println(Month.AUGUST.getValue()); // ordinal() + 1
+```
+
+**ChronoField --> for time elapsed**
+```java
+final LocalDateTime ldt = LocalDateTime.now(ZoneId.of("Asia/Tokyo"));
+System.out.println(ldt.getLong(ChronoField.MINUTE_OF_DAY));
+```
+
+**DateTimeFormatter**
+```java
+// TODO practise more patterns 
+final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMM dd, yyyy - HH:mm");
+final LocalDateTime ldt = LocalDateTime.parse("Nov 03, 2014 - 07:13", dtf);
+System.out.println(ldt); // 2014-11-03T07:13
+```
+
+**Since graduation**
+```java
+final LocalDate ldt = LocalDate.of(1998, Month.AUGUST, 15);
+final LocalDate ldtNow = LocalDate.now();
+
+final long diff = ChronoUnit.YEARS.between(ldt, ldtNow);
+System.out.println(diff); // 19 years!
+```
+
+**IsoChronology**
+```java
+java.time.LocalDate
+java.time.chrono.IsoChronology
+
+final LocalDate ld = IsoChronology.INSTANCE.date(2016, 5, 26); // 2016, 5, 25
+final LocalDate today = IsoChronology.INSTANCE.dateNow(); // today = 20170525 
+
+System.out.println(">>>>>>>>" + ld.until(today).getYears()); // 1
+-> result is 0 ( no rounding off ), have to complete a year to get 1
+```
+
+## date formatting:
+```java
+String string = "January 2, 2010";
+DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+Date date = format.parse(string);
+System.out.println(date); // Sat Jan 02 00:00:00 GMT 2010
+
+java8
+~~~~~
+String string = "January 2, 2010";
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy", Locale.ENGLISH);
+LocalDate date = LocalDate.parse(string, formatter);
+System.out.println(date); // 2010-01-02
+
+
+LocalDateTime#parse for time
+
+```
+
+
+https://docs.oracle.com/javase/tutorial/datetime/overview/naming.html
+
+
+More on date time classes
+
+https://docs.oracle.com/javase/tutorial/datetime/iso/index.html
+
+
+
+java time packages:
+-------------------
+
+time
+chrono
+format
+temporal
+    Fields (TemporalField and ChronoField) and units (TemporalUnit and ChronoUnit)
+zone
+    Useful classes: ZonedDateTime
+                    ZoneId
+                    ZoneOffset.
+
+
+also refer "http://blog.joda.org/" for java 9 features
+
+**List out ZoneIds and ZoneIdRules**
 ```java
     final Set<String> zoneidset = new TreeSet<>(ZoneId.getAvailableZoneIds());
     for (String zoneidstr : zoneidset) {
@@ -1239,121 +1424,6 @@ categories: Java, Date
 
 ```
 -------
-
-   **LocalTime.isBefore()**
-```java
-    final LocalTime lt1 = LocalTime.now(ZoneId.of("Asia/Tokyo"));
-    final LocalTime lt2 = LocalTime.now(ZoneId.of("Asia/Tokyo"));
-
-    System.out.println(lt1);
-    System.out.println(lt2);
-
-    TimeUnit.SECONDS.sleep(1);
-
-    final LocalTime lt3 = LocalTime.now(ZoneId.of("Asia/Tokyo"));
-    System.out.println(lt3);
-
-    System.out.println(lt1.isBefore(lt3));
-```
-
-    Output:
-
-    12:24:46.380
-    12:24:46.380
-    12:24:47.386
-    true
-
--------
-   **time diff**
-```java
-		final LocalTime lt1 = LocalTime.now(ZoneId.of("Asia/Tokyo"));
-		final LocalTime lt2 = LocalTime.now(ZoneId.of("Asia/Calcutta"));
-		
-		System.out.println(lt1);
-		System.out.println(lt2);
-		
-		System.out.println(ChronoUnit.HOURS.between(lt1, lt2));
-		System.out.println(ChronoUnit.MINUTES.between(lt1, lt2));
-
-Output
-11:55:33.560
-/*
-08:25:33.632
--3
--209 ( hmm. how to get 210 ? ) // TODO
-*/
-```
-
-**Some more methods** ( get timezone diff)
-[Reference](https://stackoverflow.com/questions/15788913/java-calculating-time-zone-difference)
-    
-    1) TimeZone.getRawOffset()
-    2) TimeZone.getOffset(long date) // including DST ( Daylight Savings Time)
-
----------------------------
-
-[Reference datetime samples](http://winterbe.com/posts/2014/03/16/java-8-tutorial/) 
-
-```java
-//withZone
-final DateTimeFormatter dtf = DateTimeFormatter.ofLocalizedDateTime(
-        FormatStyle.FULL).withZone(ZoneId.of("Asia/Calcutta"));
-
-//or withLocale
-
-DateTimeFormatter germanFormatter =
-        DateTimeFormatter
-            .ofLocalizedTime(FormatStyle.SHORT)
-            .withLocale(Locale.GERMAN);
-LocalTime leetTime = LocalTime.parse("13:37", germanFormatter);
-System.out.println(leetTime);   // 13:37
-```
-
-**Don't get mislead by variable names**
-```java
-final LocalDate today = LocalDate.now();
-System.out.println(today);
-final LocalDate tomorrow = today.plus(-1, ChronoUnit.DAYS);
-System.out.println(tomorrow);
-final LocalDate actToday = tomorrow.minus(1, ChronoUnit.DAYS);
-System.out.println(actToday);
-/* Output (executed on 2017/09/06)
- * 2017-09-06
- * 2017-09-05
- * 2017-09-04
- */
-
-```
-
-**Navigate to particular date**
-```java
-final LocalDate indDay = LocalDate.of(1945, Month.AUGUST, 15);
-System.out.println(indDay);
-System.out.println(Month.AUGUST.getValue()); // ordinal() + 1
-```
-
-**ChronoField --> for time elapsed**
-```java
-final LocalDateTime ldt = LocalDateTime.now(ZoneId.of("Asia/Tokyo"));
-System.out.println(ldt.getLong(ChronoField.MINUTE_OF_DAY));
-```
-
-**DateTimeFormatter**
-```java
-// TODO practise more patterns 
-final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMM dd, yyyy - HH:mm");
-final LocalDateTime ldt = LocalDateTime.parse("Nov 03, 2014 - 07:13", dtf);
-System.out.println(ldt); // 2014-11-03T07:13
-```
-
-**Since graduation**
-```java
-final LocalDate ldt = LocalDate.of(1998, Month.AUGUST, 15);
-final LocalDate ldtNow = LocalDate.now();
-
-final long diff = ChronoUnit.YEARS.between(ldt, ldtNow);
-System.out.println(diff); // 19 years!
-```
 
 
 
