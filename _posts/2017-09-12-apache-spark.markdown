@@ -99,7 +99,7 @@ resolve dependencies using maven,
 doing by changing src to different namespace 
 ```
 
-![My helpful screenshot]({{ "/assets/abcd.png" | absolute_url }})
+![My helpful screenshot]({{ "/assets/spark_flow.jpg" | absolute_url }})
 
 
 
