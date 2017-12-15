@@ -160,6 +160,31 @@ String part1 = parts[0]; // 004
 String part2 = parts[1]; // 034556
 ```
 
+## string space formatting
+```java
+final String[] strArr = { "this", "is", "fun" };
+for (final String string : strArr) {
+    System.out.format("%-6s %-5s\n", string, "###");//-> 6char 1space 5char
+}
+
+
+this   ###
+is     ###
+fun    ###  //-> 6char 1space 5char
+123456_12345
+
+
+----------------
+
+System.out.format("%-1s %-5s\n", string, "###");
+    =>
+this ###
+is ###
+fun ###
+
+
+```
+
 
 ---------------------------
 

@@ -190,6 +190,46 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 ```
 
+Chapter : Exception handling:
+-----------------------------
+
+>>> try:
+...     file = open("this is fun")
+... except IOError:
+...     print "this is fun file NOT found"
+...
+this is fun file NOT found
+
+================================================================================
+
+import modules with exception usage:
+--------------------------------------
+
+
+try:
+    import abcd
+except ImportError:
+    print "module abcd NOT found..."
+
+>>> try:
+...     import abcd
+... except ImportError:
+...     print "module abcd NOT found..."
+...
+module abcd NOT found...
+>>>
+
+
+Useful file methods.
+
+file.open()
+file.tell()
+file.seek(n, 0/1/2)
+file.read(n)
+file.close()
+file.closed --> True / False
+
+    seek / tell / read on the closed file throws ValueError
 
 
 

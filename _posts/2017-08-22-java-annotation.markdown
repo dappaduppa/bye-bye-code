@@ -162,6 +162,72 @@ public class RepeatingAnnotations {
 ```
 
 
+* parameterless annotation:
+    @Override
+
+* parameter with a name called "value"
+    @SuppressWarnings(value = "unchecked")
+
+* parameter name can be omitted if there is only one parameter
+    @SuppressWarnings("unchecked")
+
+
+* repeating annotation ( allowed from Java SE 8 )
+
+    @Author(name = "dhanveer")
+    @Author(name = "dhanasekaran")
+    class MyClass {
+        ...
+        ...
+    }
+
+
+things you already know :
+    predefined annotations
+
+    @Deprecated --> field, method, class
+    @deprecated --> javadoc
+    @Override
+    @SuppressWarnings  --> @SuppressWarnings({"deprecation, "unchecked"})
+
+@SafeVarargs --> method, and constructor level
+
+@FunctionalInterface --> Java SE 8
+    type declaration is intended to be a functional interface.
+
+Annotation applies to other annotation:
+---------------------------------------
+    --> called meta-annotation
+
+    @Retention -->
+        * RetentionPolicy.SOURCE    --> source                      level
+        * RetentionPolicy.CLASS     --> source + compiler           level
+        * RetentionPolicy.RUNTIME   --> source + compiler + runtime level
+
+
+    @Documented
+
+    @Target
+        ElementType.ANNOTATION_TYPE
+        ElementType.CONSTRUCTOR
+        ElementType.FIELD
+        ElementType.LOCAL_VARIABLE
+        ElementType.METHOD
+        ElementType.PACKAGE
+        ElementType.PARAMETER
+        ElementType.TYPE
+
+    @Inherited
+
+    @Repetable
+
+Java SE 8 --> annotation can be applied to the use of types.
+
+
+Checker framework ( University of Washington )
+----------------------------------------------
+
+
 ---------------------------
 
 
