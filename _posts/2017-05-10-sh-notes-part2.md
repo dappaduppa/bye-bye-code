@@ -646,12 +646,11 @@ grep --color='auto' -n -P "[\x80-\xFF]" <filename>
 $ grep --color='auto' -n -P "[\x80-\xFF]" abcd.txt
 10:                笆停亦笆稚his is div 2
 ```
-
-
-lfile.sh
 ---------
 
-l_serverip=10.247.144.91
+## lfile.sh
+```sh
+l_serverip=10.xxx.xxx.xxx
 l_username=t24test3
 
 l_content=dhshdjsdsjdakd342423
@@ -664,28 +663,26 @@ l_filename=abcd4.txt
 script=$(sed -e "s|\${r_content}|$l_content|" -e "s|\${r_filename}|$l_filename|" rfile.sh)
 
 ssh ${l_username}@${l_serverip} $script
+```
 
-
-2016/11/16:
+## 2016/11/16:
+```
 ~~~~~~~~~~~
     when doing $script in the ssh, if there is ioctl system call error,
     surround the $script with " (double quotes.)
     probably with 3 double quotes.
     """ (the middle one representing the actual double quote)
-
-
+```
 ---------------
 
-
-rfile.sh
-
+## rfile.sh
+```
 # beware of {} curly braces
 # if it is ${r_content}, then in the lfile it has to be ${r_content}
 # if it is ${rcontent}, then in the lfile it has to be ${rcontent}
 
 echo ${r_content} > ${r_filename}
 
-
-----------------
-
 call lfile from new6d to run rfile.sh in new1C.
+```
+----------------

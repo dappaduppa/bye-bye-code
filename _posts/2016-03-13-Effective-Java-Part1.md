@@ -537,7 +537,7 @@ public class UtilityClass {
 
 
 ## Item  6: Eliminate obsolete object references
-
+```java
 public Object pop() {
     if (size == 0)
         throw new EmptyStackException();
@@ -548,6 +548,7 @@ public Object pop() {
 
     return result;
 }
+```
 WeakHashMap
 
 LinkedHashMap.removeEldestEntry
@@ -569,6 +570,7 @@ interface MyStackIntf {
   Object pop();
   int size();
 }
+
 package item2;
 
 import java.util.Arrays;
@@ -669,7 +671,7 @@ Eliminate obsolete object references:
 ```
 
 ## Item 7: Avoid finalizers -- @ home
-	
+```java
 1) Increase the odds of finalizers getting executed...
     But NOT guarantee it.
 
@@ -725,10 +727,10 @@ public non final　class ( so that subclass not required to call super.finalize(
             }
         }
     }
-
+```
 
 ## Item 8: Obey general contract when overriding equals
-
+```java
     why have to use
         Float.compare
         Double.compare
@@ -801,37 +803,35 @@ public non final　class ( so that subclass not required to call super.finalize(
     @Override public boolean equals(Object obj) {
         throw new AssertionError();
     }
-    
+```
 
 ## Item 12: Consider implementing Comparable
+```java
         public interface Comparable<T> {
             int compareTo(T t);
         }
-
+```
 ## Item 20: Prefer class hierarchies to tagged classes
 
 ## Item 21: Use function objects to represent strategies
-
+```java
     why implement serializable in comparator.
     See the example: (page 105)
     class Host {
     private static class StrLenCmp
     implements Comparator<String>, Serializable {
-
+```
 
 ## Item 53: Prefer interfaces to reflection
 
+## Chapter 5: Generics
 
-##Chapter 5: Generics
-
-##    Item 29: Consider typesafe heterogeneous containers
+## Item 29: Consider typesafe heterogeneous containers
 
 ---------------------------
 
-
-
-
-Item 66: Synchronize access to shared mutable data
+## Item 66: Synchronize access to shared mutable data
+```
 //////////////////////////////////////////////////
 
     Atomic ? yes / no ?
@@ -932,9 +932,9 @@ Item 66: Synchronize access to shared mutable data
 
     inter-thread communication VS mutual exclusion
     ( stopRequested boolean var) VS ( int++ )
-
-
-Item 67: Avoid excessive synchronization
+```
+## Item 67: Avoid excessive synchronization
+```
 ////////////////////////////////////////
 
     Calling unknown methods from synchronized method cause problem...
@@ -952,10 +952,10 @@ Item 67: Avoid excessive synchronization
     StringBuffer vs StringBuilder
 
     lock splitting, lock striping, nonblocking concurrency control
+```
 
-
-
-Item 70: Document Thread Safety:
+## Item 70: Document Thread Safety:
+```
 ////////////////////////////////
 
     Map<K,V> synchedMap = Collections.synchronizedMap(somemap);
@@ -976,11 +976,10 @@ Item 70: Document Thread Safety:
                 ...
         }
    }
-
-Item 71: Use Lazy initialization judiciously
+```
+## Item 71: Use Lazy initialization judiciously
+```
 ////////////////////////////////////////////
-
-
     Lazy initialization holder class idiom /
     On demand holder class idiom
     For static fields
@@ -1028,9 +1027,9 @@ Item 71: Use Lazy initialization judiciously
         }
         return result;
     }
-
-
-Item 72: Don't depend on thread scheduler.
+```
+## Item 72: Don't depend on thread scheduler.
+```
 ///////////////////////////////////////////
 
     how is AtomicInteger work and make sure not overlapping between threads.
@@ -1072,14 +1071,13 @@ Item 72: Don't depend on thread scheduler.
     * Use
         Thread.sleep(1)
             for concurrency testing
-
-
-Item 73: Avoid thread groups
+```
+## Item 73: Avoid thread groups
+```
 /////////////////////////////
 
 Avoid thread groups:
             originally intended for applet.
-
 
 Favour
     Thread.setUncaughtExceptionHandler
@@ -1101,12 +1099,13 @@ Favour
 
     Use Executors
 
-
 Finding  the  right  balance  of  sequentiality and  asynchrony  is  often  a  characteristic  of
 efficient people  and the same is true of programs.
-
+```
 --------------------------------------------------------------------------------
-Item 74: Implement Serializable judiciously
+
+## Item 74: Implement Serializable judiciously
+```
 --------------------------------------------------------------------------------
     Dont accept the default searialized form
     Why?
@@ -1124,12 +1123,12 @@ Item 74: Implement Serializable judiciously
         4) readObjectNoData() is called back
     cover a corner case involving the addition of a serializable superclass to an
     existing serializable class.
-
---------------------------------------------------------------------------------
-Item 78: Consider serialization proxies instead of serialized instances
+```
 --------------------------------------------------------------------------------
 
-
+## Item 78: Consider serialization proxies instead of serialized instances
+```
+--------------------------------------------------------------------------------
 Serialization proxies
 ---------------------
 
@@ -1168,10 +1167,12 @@ Avoid the above risks:
         return new SerializationProxy(this);
     }
 
+```
+----
 
---------------
-
-All the above discussed detail is the item # 1) major cost of implementing Serializable.
+```
+All the above discussed detail is the item 
+# 1) major cost of implementing Serializable.
 
 i.e. cost #1) Decrease the flexibility to change class implementation.
 
@@ -1210,7 +1211,7 @@ Rule of thumb for designing whether to implement Serializable or not.
 
 Inner class should not implement Serializable
   A static member class can, however, implement Serializable
-
+```
 
 /******************************************************************************/
 

@@ -7,24 +7,25 @@ categories: Java
     
     jagadesh4java blogspot
 
-Java Heap
+## Java Heap
+###    consists of...
+```
+1) Young generation
 
-    consists of...
+    divided to 3 partitions
+    |
+    +-->1) Eden
+    |
+    |
+    +-->2) S1 space
+    |
+    |
+    +-->3) S2 space
+```
 
-    1) Young generation
-
-      divided to 3 partitions
-        |
-        +-->1) Eden
-        |
-        |
-        +-->2) S1 space
-        |
-        |
-        +-->3) S2 space
-
-    2) Old generation (also sometimes called as "tenured space")
-
+---
+```
+2) Old generation (also sometimes called as "tenured space")
 
 S1,
 S2 are called as survivor spaces
@@ -92,19 +93,21 @@ When the survivor space is FULL,
 |  | Object |  | Object |  | Object |  |
 |  +--------+  +--------+  +--------+  |
 +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
-
-
-
-Why Old generation?
+```
 -------------------
 
+## Why Old generation?
+-------------------
+```
 After certain no. of gcs has passed, but objects still reside in
 young generation , ( NOT moved to survivor space) are moved to old generation.
 This means objects in the old generations still have references from application
 code from or other objects.
+```
+-------------------
 
-
-Permanent space:
+## Permanent space:
+```
 -----------------
 
 +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
@@ -121,9 +124,11 @@ Permanent space:
 
 * garbage collection happens in "permanent space" also.
   we can enable or disable by jvm arg "-noclassgc"
+```
+-------------------
 
-
-Native Area or Code cache:
+## Native Area or Code cache:
+```
 ---------------------------
 
 * JVM internal operations like
@@ -141,8 +146,10 @@ Native Area or Code cache:
     yes I did it approximately ( but not excatly)
 
     Native memory size = Process Size - Max Heap Size - Max Perm Size
-
-Stack:
+```
+-------------------
+## Stack:
+```
 ------
     LIFO ( Last in First Out )
 
@@ -159,8 +166,10 @@ Stack:
     * utilities find stack info.
         jps
         jstack
-
-what is this memnory equation:
+```
+-------------------
+## what is this memnory equation:
+```
 ------------------------------
 
     Heap size
@@ -168,14 +177,16 @@ what is this memnory equation:
 no. of threads * thread stack size
         -
     total RAM used by JVM
-
-
-linux:
+```
+-------------------
+## linux:
+```
 ------
     find upper limit of stack setting
     ulimit -s
-
-Generator sizing:
+```
+## Generator sizing:
+```
 -----------------
     young generation cane be adjusted with
 
@@ -189,15 +200,16 @@ Generator sizing:
 
                                                          ( 1/6 of eden space )
     -XX: MaxNewSize
-
-
-Why keep -Xms and -Xmx size as same?
+```
 ------------------------------------
-
+## Why keep -Xms and -Xmx size as same?
+------------------------------------
+```
 * no calculation needed at runtime to extend the initial heap size.
-
-
-How is default java size is determined?
+```
+------------------------------------
+## How is default java size is determined?
+```
 ---------------------------------------
 
 ram/physical memory : upto ~ 194 MB
@@ -214,13 +226,11 @@ ex:
     2)
      ram/physical memory : 1GB
      heap size           : 1/4 * 1GB => 256MB
-
-
-Find out default memory model:
+```
 ------------------------------
-
+## Find out default memory model:
+```java
 java -XX:+PrintFlagsFinal -version | grep "whatever you want"/for ex: heap
-
 
                     [Global flags]
                         uintx AdaptiveSizeDecrementScaleFactor          = 4                                   {product}
@@ -941,10 +951,11 @@ java -XX:+PrintFlagsFinal -version | grep "whatever you want"/for ex: heap
                     java version "1.8.0_91"
                     Java(TM) SE Runtime Environment (build 1.8.0_91-b15)
                     Java HotSpot(TM) 64-Bit Server VM (build 25.91-b15, mixed mode)
-
+```
 ----------------------------------------
 
-find out heap details of Java process
+## find out heap details of Java process
+```java
 ( Please note down it has to be "java" process, not even "javaw" process can
 be attached.)
 
@@ -997,12 +1008,11 @@ Usage: jmap -heap 12464
            0.0% used
 
         1580 interned Strings occupying 121536 bytes.
-
-
-
+```
 --------------------------------------------------------------------------------
 
-java -X lists non-standard options:
+## java -X lists non-standard options:
+```java
 ===================================
 java -X
     -Xmixed           混合モードの実行(デフォルト)
@@ -1038,8 +1048,4 @@ java -X
                       すべてのロケール関連の設定を表示して続行する
 
 -Xオプションは非標準なので、予告なく変更される場合があります。
-
-
-
-
-
+```
